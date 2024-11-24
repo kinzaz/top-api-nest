@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  image            String
+  title            String
+  price            Float
+  oldPrice         Float
+  credit           Float
+  calculatedRating Float
+  description      String
+  advantages       String
+  disAdvantages    String
+  categories       String[]
+  tags             String
+  characteristics  Json
+}
+
+model Review {
+  id          String @id @default(cuid())
+  name        String
+  title       String
+  description String
+  rating      Int
+  productId   String @unique
+}
+
+model TopPage {
+  id             String           @id @default(cuid())
+  firstCategory  TopLevelCategory
+  secondCategory String
+  alias          String
+  title          String
+  category       String
+  hh             Hh?
+  advantages     Advantage[]
+  seoText        String
+  tagsTitle      String
+  tags           String[]
+}
+
+enum TopLevelCategory {
+  Courses
+  Services
+  Books
+  Products
+}
+
+model Hh {
+  id           String  @id @default(cuid())
+  count        Int
+  juniorSalary Float
+  middleSalary Float
+  seniorSalary Float
+  topPageId    String  @unique
+  topPage      TopPage @relation(fields: [topPageId], references: [id])
+}
+
+model Advantage {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  topPageId   String
+  topPage     TopPage @relation(fields: [topPageId], references: [id])
+}
