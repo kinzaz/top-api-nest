@@ -8,13 +8,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TopPageModule = void 0;
 const common_1 = require("@nestjs/common");
+const prisma_module_1 = require("../prisma/prisma.module");
 const top_page_controller_1 = require("./top-page.controller");
+const top_page_service_1 = require("./top-page.service");
 let TopPageModule = class TopPageModule {
 };
 exports.TopPageModule = TopPageModule;
 exports.TopPageModule = TopPageModule = __decorate([
     (0, common_1.Module)({
-        controllers: [top_page_controller_1.TopPageController]
+        imports: [prisma_module_1.PrismaModule],
+        controllers: [top_page_controller_1.TopPageController],
+        providers: [top_page_service_1.TopPageService],
+        exports: [top_page_service_1.TopPageService],
     })
 ], TopPageModule);
 //# sourceMappingURL=top-page.module.js.map

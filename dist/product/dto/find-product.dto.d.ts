@@ -1,4 +1,4 @@
-export declare class FindProduct {
+export declare class FindProductDto {
     category: string;
     limit: number;
 }

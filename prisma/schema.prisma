@@ -14,19 +14,18 @@ datasource db {
 }
 
 model Product {
-  id               String   @id @default(cuid())
-  image            String
-  title            String
-  price            Float
-  oldPrice         Float
-  credit           Float
-  calculatedRating Float
-  description      String
-  advantages       String
-  disAdvantages    String
-  categories       String[]
-  tags             String
-  characteristics  Json
+  id              String   @id @default(cuid())
+  image           String
+  title           String
+  price           Float
+  oldPrice        Float?
+  credit          Float
+  description     String
+  advantages      String
+  disAdvantages   String
+  categories      String[]
+  tags            String[]
+  characteristics Json
 }
 
 model Review {
@@ -35,44 +34,24 @@ model Review {
   title       String
   description String
   rating      Int
-  productId   String @unique
+  productId   String
 }
 
 model TopPage {
-  id             String           @id @default(cuid())
-  firstCategory  TopLevelCategory
-  secondCategory String
-  alias          String
-  title          String
-  category       String
-  hh             Hh?
-  advantages     Advantage[]
-  seoText        String
-  tagsTitle      String
-  tags           String[]
+  id                String   @id @default(cuid())
+  firstCategory     Int
+  secondaryCategory String
+  alias             String   @unique
+  title             String
+  category          String
+  hh                Json?
+  advantages        Json[]
+  seoText           String
+  tagsTitle         String
+  tags              String[]
 }
 
-enum TopLevelCategory {
-  Courses
-  Services
-  Books
-  Products
-}
-
-model Hh {
-  id           String  @id @default(cuid())
-  count        Int
-  juniorSalary Float
-  middleSalary Float
-  seniorSalary Float
-  topPageId    String  @unique
-  topPage      TopPage @relation(fields: [topPageId], references: [id])
-}
-
-model Advantage {
-  id          String  @id @default(cuid())
-  title       String
-  description String
-  topPageId   String
-  topPage     TopPage @relation(fields: [topPageId], references: [id])
+model User {
+  email    String @unique
+  password String
 }

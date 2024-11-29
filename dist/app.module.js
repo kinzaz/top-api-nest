@@ -16,6 +16,8 @@ const product_module_1 = require("./product/product.module");
 const review_module_1 = require("./review/review.module");
 const top_page_module_1 = require("./top-page/top-page.module");
 const prisma_module_1 = require("./prisma/prisma.module");
+const files_module_1 = require("./files/files.module");
+const sitemap_module_1 = require("./sitemap/sitemap.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -28,6 +30,8 @@ exports.AppModule = AppModule = __decorate([
             review_module_1.ReviewModule,
             config_1.ConfigModule.forRoot(),
             prisma_module_1.PrismaModule,
+            files_module_1.FilesModule,
+            sitemap_module_1.SitemapModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

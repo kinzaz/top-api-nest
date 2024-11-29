@@ -14,53 +14,90 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductController = void 0;
 const common_1 = require("@nestjs/common");
+const jwt_guard_1 = require("../auth/guards/jwt.guard");
+const id_validation_pipe_1 = require("../pipes/id-validation.pipe");
+const create_product_dto_1 = require("./dto/create-product.dto");
 const find_product_dto_1 = require("./dto/find-product.dto");
+const product_consts_1 = require("./product.consts");
+const product_service_1 = require("./product.service");
 let ProductController = class ProductController {
-    async create(dto) { }
-    async get(id) { }
-    async delete(id) { }
-    async patch(id, dto) { }
-    async find(dto) { }
+    constructor(productService) {
+        this.productService = productService;
+    }
+    async create(dto) {
+        return this.productService.create(dto);
+    }
+    async get(id) {
+        const product = await this.productService.findById(id);
+        if (!product) {
+            throw new common_1.NotFoundException(product_consts_1.NOT_FOUNT_PRODUCT);
+        }
+        return product;
+    }
+    async delete(id) {
+        const deletedProduct = await this.productService.delete(id);
+        if (!deletedProduct) {
+            throw new common_1.NotFoundException(product_consts_1.NOT_FOUNT_PRODUCT);
+        }
+        return deletedProduct;
+    }
+    async patch(id, dto) {
+        const updatedProduct = await this.productService.patch(id, dto);
+        if (!updatedProduct) {
+            throw new common_1.NotFoundException(product_consts_1.NOT_FOUNT_PRODUCT);
+        }
+        return updatedProduct;
+    }
+    async find(dto) {
+        return this.productService.findWithReviews(dto);
+    }
 };
 exports.ProductController = ProductController;
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     (0, common_1.Post)('create'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [create_product_dto_1.CreateProductDto]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "create", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', id_validation_pipe_1.IdValidationPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "get", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', id_validation_pipe_1.IdValidationPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "delete", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', id_validation_pipe_1.IdValidationPipe)),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, create_product_dto_1.CreateProductDto]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "patch", null);
 __decorate([
-    (0, common_1.HttpCode)(200),
-    (0, common_1.Post)(),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
+    (0, common_1.Post)('find'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [find_product_dto_1.FindProduct]),
+    __metadata("design:paramtypes", [find_product_dto_1.FindProductDto]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "find", null);
 exports.ProductController = ProductController = __decorate([
-    (0, common_1.Controller)('product')
+    (0, common_1.Controller)('product'),
+    __metadata("design:paramtypes", [product_service_1.ProductService])
 ], ProductController);
 //# sourceMappingURL=product.controller.js.map

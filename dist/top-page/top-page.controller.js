@@ -14,53 +14,104 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TopPageController = void 0;
 const common_1 = require("@nestjs/common");
+const jwt_guard_1 = require("../auth/guards/jwt.guard");
+const id_validation_pipe_1 = require("../pipes/id-validation.pipe");
+const create_top_page_dto_1 = require("./dto/create-top-page.dto");
 const find_top_page_dto_1 = require("./dto/find-top-page.dto");
+const top_page_service_1 = require("./top-page.service");
 let TopPageController = class TopPageController {
-    async create(dto) { }
-    async get(id) { }
-    async delete(id) { }
-    async patch(id, dto) { }
-    async find(dto) { }
+    constructor(topPageService) {
+        this.topPageService = topPageService;
+    }
+    async create(dto) {
+        return this.topPageService.create(dto);
+    }
+    async get(id) {
+        const page = await this.topPageService.findById(id);
+        if (!page) {
+            throw new common_1.NotFoundException('Страница не найдена');
+        }
+        return page;
+    }
+    async getByAlias(alias) {
+        const page = await this.topPageService.findByAlias(alias);
+        if (!page) {
+            throw new common_1.NotFoundException('Страница не найдена');
+        }
+        return page;
+    }
+    async delete(id) {
+        const deletedPage = await this.topPageService.delete(id);
+        if (!deletedPage) {
+            throw new common_1.NotFoundException('Страница не найдена');
+        }
+        return deletedPage;
+    }
+    async patch(id, dto) {
+        const updatedPage = await this.topPageService.patch(id, dto);
+        if (!updatedPage) {
+            throw new common_1.NotFoundException('Страница не найдена');
+        }
+        return updatedPage;
+    }
+    async find(dto) {
+        return this.topPageService.findByCategory(dto.firstCategory);
+    }
 };
 exports.TopPageController = TopPageController;
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     (0, common_1.Post)('create'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [create_top_page_dto_1.CreateTopPageDto]),
     __metadata("design:returntype", Promise)
 ], TopPageController.prototype, "create", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', id_validation_pipe_1.IdValidationPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], TopPageController.prototype, "get", null);
 __decorate([
+    (0, common_1.Get)('byAlias/:alias'),
+    __param(0, (0, common_1.Param)('alias')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], TopPageController.prototype, "getByAlias", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
     (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', id_validation_pipe_1.IdValidationPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], TopPageController.prototype, "delete", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', id_validation_pipe_1.IdValidationPipe)),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, create_top_page_dto_1.CreateTopPageDto]),
     __metadata("design:returntype", Promise)
 ], TopPageController.prototype, "patch", null);
 __decorate([
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     (0, common_1.HttpCode)(200),
-    (0, common_1.Post)(),
+    (0, common_1.Post)('find'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [find_top_page_dto_1.FindTopPageDto]),
     __metadata("design:returntype", Promise)
 ], TopPageController.prototype, "find", null);
 exports.TopPageController = TopPageController = __decorate([
-    (0, common_1.Controller)('top-page')
+    (0, common_1.Controller)('top-page'),
+    __metadata("design:paramtypes", [top_page_service_1.TopPageService])
 ], TopPageController);
 //# sourceMappingURL=top-page.controller.js.map

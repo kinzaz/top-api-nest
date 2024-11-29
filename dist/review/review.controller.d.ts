@@ -5,18 +5,18 @@ export declare class ReviewController {
     constructor(reviewService: ReviewService);
     create(dto: CreateReviewDto): Promise<{
         name: string;
-        id: string;
         title: string;
         description: string;
+        id: string;
         rating: number;
         productId: string;
     }>;
     delete(id: string): Promise<void>;
     getByProduct(productId: string): Promise<{
         name: string;
-        id: string;
         title: string;
         description: string;
+        id: string;
         rating: number;
         productId: string;
     }[]>;
